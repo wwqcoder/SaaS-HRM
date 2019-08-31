@@ -7,6 +7,11 @@
     <groupId>cn.wwq</groupId>
     <artifactId>ihrm_parent</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>ihrm_common</module>
+        <module>ihrm_common_model</module>
+        <module>ihrm_company</module>
+    </modules>
     <packaging>pom</packaging>
     <name>ihrm_parent</name>
     <description>IHRM-人力资源</description>
