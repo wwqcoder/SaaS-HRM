@@ -8,6 +8,9 @@ import com.ihrm.company.service.DepartmentService;
 import com.ihrm.domain.company.Company;
 import com.ihrm.domain.company.Department;
 import com.ihrm.domain.company.response.DeptListResult;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,10 @@ import java.util.List;
 @RestController
 //3.设置父路径
 @RequestMapping(value="/company")   //  company/deparment
+@Slf4j
 public class DepartmentController extends BaseController{
+
+    private Logger logger = LoggerFactory.getLogger(DepartmentController.class);
 
     @Autowired
     private DepartmentService departmentService;
@@ -54,6 +60,7 @@ public class DepartmentController extends BaseController{
         List<Department> list = departmentService.findAll(companyId);
         //3.构造返回结果
         DeptListResult deptListResult = new DeptListResult(company,list);
+        logger.info("查询的结果是：{}",deptListResult);
         return new Result(ResultCode.SUCCESS,deptListResult);
     }
 
