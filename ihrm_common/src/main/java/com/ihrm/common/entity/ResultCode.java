@@ -1,5 +1,7 @@
 package com.ihrm.common.entity;
 
+import sun.util.locale.provider.FallbackLocaleProviderAdapter;
+
 /**
  * 公共的返回码
  *    返回码code：
@@ -16,9 +18,10 @@ public enum ResultCode {
     FAIL(false,10001,"操作失败"),
     UNAUTHENTICATED(false,10002,"您还未登录"),
     UNAUTHORISE(false,10003,"权限不足"),
-    SERVER_ERROR(false,99999,"抱歉，系统繁忙，请稍后重试！");
+    SERVER_ERROR(false,99999,"抱歉，系统繁忙，请稍后重试！"),
 
     //---用户操作返回码  2xxxx----
+    MOBILEORPASSWORDERROR(false,20001,"手机号或者密码错误！");
     //---企业操作返回码  3xxxx----
     //---权限操作返回码----
     //---其他操作返回码----
