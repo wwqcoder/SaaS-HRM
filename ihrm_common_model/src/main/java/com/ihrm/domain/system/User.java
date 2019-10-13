@@ -93,6 +93,13 @@ public class User implements Serializable {
     private String departmentName;
 
     /**
+     *  saasAdmin saas平台管理员
+     *  coAdmin   企业管理员
+     *  user      普通用户
+     */
+    private String level;
+
+    /**
      *  JsonIgnore
      *     : 忽略json转化
      */

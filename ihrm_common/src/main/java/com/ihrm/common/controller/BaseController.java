@@ -1,5 +1,6 @@
 package com.ihrm.common.controller;
 
+import io.jsonwebtoken.Claims;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,16 +13,20 @@ public class BaseController {
     protected String companyId;
     protected String companyName;
 
+    protected Claims claims;
+
     @ModelAttribute
     public void setResAnReq(HttpServletRequest request,HttpServletResponse response) {
         this.request = request;
         this.response = response;
-        /**
-         * 目前使用 companyId = 1
-         *         companyName = "传智播客"
-         */
-        this.companyId = "1";
-        this.companyName = "传智播客";
+
+        Object obj = request.getAttribute("user_claims");
+        if (null != obj){
+            this.claims = (Claims) obj;
+            this.companyId = (String) claims.get("companyId");
+            this.companyName = (String) claims.get("companyName");
+        }
+
     }
 
 }

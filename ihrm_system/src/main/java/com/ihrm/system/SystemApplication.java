@@ -6,25 +6,33 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 
-/**
- * @author: Mr.Wang
- * @create: 2019-08-31 10:54
- **/
+//1.配置springboot的包扫描
 @SpringBootApplication(scanBasePackages = "com.ihrm")
-@EntityScan("com.ihrm.domain.system")
+//2.配置jpa注解的扫描
+@EntityScan(value="com.ihrm.domain.system")
 public class SystemApplication {
+    /**
+     * 启动方法
+     */
     public static void main(String[] args) {
-        SpringApplication.run(SystemApplication.class, args);
+        SpringApplication.run(SystemApplication.class,args);
     }
+
     @Bean
-    public IdWorker idWorkker() {
-        return new IdWorker(1, 1);
-   }
+    public IdWorker idWorker() {
+        return new IdWorker();
+    }
 
-   @Bean
-    public JwtUtils jwtUtils(){
+    @Bean
+    public JwtUtils jwtUtils() {
         return new JwtUtils();
-   }
+    }
 
+    //解决no session
+    @Bean
+    public OpenEntityManagerInViewFilter openEntityManagerInViewFilter() {
+        return new OpenEntityManagerInViewFilter();
+    }
 }

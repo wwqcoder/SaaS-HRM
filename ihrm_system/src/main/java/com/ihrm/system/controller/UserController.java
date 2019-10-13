@@ -8,9 +8,11 @@ import com.ihrm.common.entity.ResultCode;
 
 import com.ihrm.common.exception.CommonException;
 import com.ihrm.common.utils.JwtUtils;
+import com.ihrm.domain.system.Permission;
 import com.ihrm.domain.system.User;
 import com.ihrm.domain.system.response.ProfileResult;
 import com.ihrm.domain.system.response.UserResult;
+import com.ihrm.system.service.PermissionService;
 import com.ihrm.system.service.UserService;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.HashAttributeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 import java.util.HashMap;
@@ -42,6 +45,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PermissionService permissionService;
 
     @Autowired
     private JwtUtils jwtUtils;
@@ -157,25 +163,25 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
     public Result profile(HttpServletRequest request) throws Exception {
 
-        /**
-         * 从请求头信息中获取token数据
-         *  1，获取请求头信息 名称=Authorization
-         *  2，替换Bearer+空格
-         *  3，解析token
-         *  4，获取clamis
-         */
-        //1，获取请求头信息 名称=Authorization
-        String authorization = request.getHeader("Authorization");
-        if (StringUtils.isEmpty(authorization)){
-            throw new CommonException(ResultCode.UNAUTHENTICATED);
-        }
-        //2，替换Bearer+空格
-        String token = authorization.replace("Bearer ", "");
-        //3，解析token
-        Claims claims = jwtUtils.parseJwt(token);
         String userId = claims.getId();
         User user = userService.findById(userId);
-        ProfileResult result = new ProfileResult(user);
+
+        //根据不同的用户级别获取用户权限
+
+        ProfileResult result = null;
+        if ("user".equals(user.getLevel())){
+            //普通用户
+            result = new ProfileResult(user);
+        }else {
+            Map map = new HashMap();
+            if ("coAdmin".equals(user.getLevel())) {
+                //企业管理员
+                map.put("enVisible","1");
+            }
+            List<Permission> list = permissionService.findAll(map);
+            result = new ProfileResult(user, list);
+
+        }
         return new Result(ResultCode.SUCCESS,result);
     }
 }
