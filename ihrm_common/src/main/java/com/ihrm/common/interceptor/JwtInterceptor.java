@@ -36,9 +36,9 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
 
     /**
      * 简化获取token数据的代码编写（判断是否登录）
-     *  1.通过request获取请求token信息
-     *  2.从token中解析获取claims
-     *  3.将claims绑定到request域中
+     * 1.通过request获取请求token信息
+     * 2.从token中解析获取claims
+     * 3.将claims绑定到request域中
      */
 
     @Autowired
@@ -49,13 +49,13 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
         // 1.通过request获取请求token信息
         String authorization = request.getHeader("Authorization");
         //判断请求头信息是否为空，或者是否已Bearer开头
-        if(!StringUtils.isEmpty(authorization) && authorization.startsWith("Bearer")) {
+        if (!StringUtils.isEmpty(authorization) && authorization.startsWith("Bearer")) {
             //获取token数据
-            String token = authorization.replace("Bearer ","");
+            String token = authorization.replace("Bearer ", "");
             //解析token获取claims
             Claims claims = jwtUtils.parseJwt(token);
-            if(claims != null) {
-                /*//通过claims获取到当前用户的可访问API权限字符串
+            if (claims != null) {
+                //通过claims获取到当前用户的可访问API权限字符串
                 String apis = (String) claims.get("apis");  //api-user-delete,api-user-update
                 //通过handler
                 HandlerMethod h = (HandlerMethod) handler;
@@ -64,17 +64,14 @@ public class JwtInterceptor extends HandlerInterceptorAdapter {
                 //获取当前请求接口中的name属性
                 String name = annotation.name();
                 //判断当前用户是否具有响应的请求权限
-                if(apis.contains(name)) {*/
-                    request.setAttribute("user_claims",claims);
-                    //return true;
-                }/*else {
+                if (apis.contains(name)) {
+                    request.setAttribute("user_claims", claims);
+                    return true;
+                } else {
                     throw new CommonException(ResultCode.UNAUTHORISE);
-                }*/
-
-                return true;
+                }
             }
-        /*}
-        throw new CommonException(ResultCode.UNAUTHENTICATED);*/
-        return false;
+        }
+        throw new CommonException(ResultCode.UNAUTHENTICATED);
     }
 }
