@@ -1,7 +1,5 @@
 package com.ihrm.common.entity;
 
-import sun.util.locale.provider.FallbackLocaleProviderAdapter;
-
 /**
  * 公共的返回码
  *    返回码code：

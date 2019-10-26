@@ -26,6 +26,17 @@
             <version>2.1.9.RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>cn.wwq</groupId>
+            <artifactId>ihrm_common_model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 

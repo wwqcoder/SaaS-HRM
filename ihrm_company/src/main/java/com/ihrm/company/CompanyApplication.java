@@ -1,6 +1,7 @@
 package com.ihrm.company;
 
 import com.ihrm.common.utils.IdWorker;
+import com.ihrm.common.utils.JwtUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -19,5 +20,10 @@ public class CompanyApplication {
     @Bean
     public IdWorker idWorkker() {
         return new IdWorker(1, 1);
+   }
+
+   @Bean
+    public JwtUtils jwtUtils(){
+        return new JwtUtils();
    }
 }
