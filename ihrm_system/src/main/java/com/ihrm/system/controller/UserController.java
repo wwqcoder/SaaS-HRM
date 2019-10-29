@@ -14,6 +14,7 @@ import com.ihrm.domain.system.Role;
 import com.ihrm.domain.system.User;
 import com.ihrm.domain.system.response.ProfileResult;
 import com.ihrm.domain.system.response.UserResult;
+import com.ihrm.system.client.DepartmentFeignClient;
 import com.ihrm.system.service.PermissionService;
 import com.ihrm.system.service.UserService;
 import io.jsonwebtoken.Claims;
@@ -59,6 +60,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    DepartmentFeignClient departmentFeignClient;
 
     /**
      * 分配角色
@@ -228,6 +232,18 @@ public class UserController extends BaseController {
 //        }
         return new Result(ResultCode.SUCCESS,result);
     }
+
+    /**
+     * 测试Feign组件
+     * 调用系统微服务的/test接口传递部门id，通过feign调用部门微服务获取部门信息
+     */
+    @RequestMapping(value = "/test/{id}", method = RequestMethod.GET)
+    public Result testFeign(@PathVariable(value = "id") String id) {
+        Result result = departmentFeignClient.findById(id);
+        return result;
+    }
+
+
 
     public static void main(String[] args) {
         String password = new Md5Hash("123456","13800000003",3).toString();
