@@ -1,8 +1,10 @@
 package com.ihrm.system.service;
 
 import com.ihrm.common.utils.IdWorker;
+import com.ihrm.domain.company.Department;
 import com.ihrm.domain.system.Role;
 import com.ihrm.domain.system.User;
+import com.ihrm.system.client.DepartmentFeignClient;
 import com.ihrm.system.dao.RoleDao;
 import com.ihrm.system.dao.UserDao;
 import org.apache.shiro.crypto.hash.Md5Hash;
@@ -30,6 +32,9 @@ public class UserService {
 
     @Autowired
     private IdWorker idWorker;
+
+    @Autowired
+    private DepartmentFeignClient departmentFeignClient;
 
     /**
      * 1.保存用户
@@ -139,5 +144,35 @@ public class UserService {
 
     public User findByMobile(String mobile) {
         return userDao.findByMobile(mobile);
+    }
+
+    /**
+     * 批量保存用户
+     * @param list
+     * @param companyId
+     * @param companyName
+     */
+    public void patchSave(ArrayList<User> list, String companyId, String companyName) {
+        for (User user : list) {
+            //默认密码
+            user.setPassword(new Md5Hash("123456",user.getMobile(),3).toString());
+            //ID
+            user.setId(idWorker.nextId()+"");
+            //基本属性
+            user.setCompanyId(companyId);
+            user.setCompanyName(companyName);
+            user.setInServiceStatus(1);
+            user.setEnableState(1);
+            user.setLevel("user");
+
+            //填充部门的属性
+            Department department = departmentFeignClient.findByCode(user.getDepartmentId(), companyId);
+            if (null != department){
+                user.setDepartmentId(department.getId());
+                user.setDepartmentName(department.getName());
+            }
+            userDao.save(user);
+        }
+
     }
 }

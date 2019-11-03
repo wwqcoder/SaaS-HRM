@@ -20,6 +20,8 @@ import com.ihrm.system.service.UserService;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -32,10 +34,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.print.attribute.HashAttributeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +68,66 @@ public class UserController extends BaseController {
 
     @Autowired
     DepartmentFeignClient departmentFeignClient;
+
+    /**
+     * 导入Excel,添加用户
+     * 文件上传，springboot
+     */
+    @RequestMapping(value = "/user/import",method = RequestMethod.POST)
+    public Result importUser(@RequestParam(name = "file") MultipartFile file) throws IOException {
+        //1.解析Excel
+        //1。1 根据Excel文件创建工作薄
+        Workbook wb = new XSSFWorkbook(file.getInputStream());
+        //1.2 获取Sheet
+        Sheet sheet = wb.getSheetAt(0);
+        //1.3 获取Sheet中的每一行和每一个单元格
+        //2。获取用户数据列表
+        ArrayList<User> list = new ArrayList<>();
+        for (int rowNum = 0; rowNum <= sheet.getLastRowNum(); rowNum++) {
+            Row row = sheet.getRow(rowNum);
+            Object[] values = new Object[row.getLastCellNum()];
+            for (int cellNum = 1; cellNum < row.getLastCellNum(); cellNum ++){
+                Cell cell = row.getCell(cellNum);
+                Object value = getCellValue(cell);
+                values[cellNum] = value;
+            }
+            User user = new User(values);
+            list.add(user);
+        }
+        //3.批量保存用户
+        userService.patchSave(list,companyId,companyName);
+        return new Result(ResultCode.SUCCESS);
+    }
+
+    public static Object getCellValue(Cell cell) {
+        //1.获取到单元格的属性类型
+        CellType cellType = cell.getCellType();
+        //2.根据单元格数据类型获取数据
+        Object value = null;
+        switch (cellType) {
+            case STRING:
+                value = cell.getStringCellValue();
+                break;
+            case BOOLEAN:
+                value = cell.getBooleanCellValue();
+                break;
+            case NUMERIC:
+                if(DateUtil.isCellDateFormatted(cell)) {
+                    //日期格式
+                    value = cell.getDateCellValue();
+                }else{
+                    //数字
+                    value = cell.getNumericCellValue();
+                }
+                break;
+            case FORMULA: //公式
+                value = cell.getCellFormula();
+                break;
+            default:
+                break;
+        }
+        return value;
+    }
 
     /**
      * 分配角色
