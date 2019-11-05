@@ -16,4 +16,5 @@ public interface UserCompanyPersonalDao extends JpaRepository<UserCompanyPersona
 
     UserCompanyPersonal findByUserId(String userId);
 
+    List<EmployeeReportResult> findByReport(String companyId, String s);
 }

@@ -213,5 +213,16 @@ public class EmployeeController extends BaseController {
         return new Result(ResultCode.SUCCESS,pr);
     }
 
+    /**
+     * 使用模板打印生成报表
+     * @param month  年-月
+     */
+    @RequestMapping(value = "/export/{month}", method = RequestMethod.GET)
+    public void export(@PathVariable String month){
+        //1.获取报表数据
+        List<EmployeeReportResult> list = userCompanyPersonalService.findByReport(companyId,month);
+
+    }
+
 
 }
