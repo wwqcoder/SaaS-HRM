@@ -213,7 +213,7 @@ public class EmployeeController extends BaseController {
     }
 
     /**
-     * 当月人事报表导出
+     * 当月人事报表导出[百万数据实现导出]
      *  参数：
      *      年月-月（2018-02%）
      */
