@@ -34,7 +34,7 @@ public class BaseController {
 //
 //    }
 
-    //获取shiro获取
+    //获取shiro
     @ModelAttribute
     public void setResAnReq(HttpServletRequest request,HttpServletResponse response) {
         this.request = request;

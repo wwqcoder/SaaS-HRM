@@ -8,6 +8,7 @@ import com.ihrm.common.entity.ResultCode;
 import com.ihrm.common.exception.CommonException;
 import com.ihrm.common.utils.BeanMapUtils;
 import com.ihrm.common.utils.DownloadUtils;
+import com.ihrm.common.utils.ExcelExportUtil;
 import com.ihrm.domain.employee.*;
 import com.ihrm.domain.employee.response.EmployeeReportResult;
 import com.ihrm.employee.service.*;
@@ -296,14 +297,20 @@ public class EmployeeController extends BaseController {
     /**
      * 使用模板打印生成报表
      * @param month  年-月
+     *
+     *   sxssf对象不支持模板打印
      */
     @RequestMapping(value = "/export/{month}", method = RequestMethod.GET)
-    public void export(@PathVariable String month) throws IOException {
+    public void export(@PathVariable String month) throws Exception {
         //1.获取报表数据
         List<EmployeeReportResult> list = userCompanyPersonalService.findByReport(companyId,month);
         //2.加载模板
         Resource resource = new ClassPathResource("excel-template/hr-demo.xlsx");
         FileInputStream fis = new FileInputStream(resource.getFile());
+
+        //3.通过工具类完成下载
+//        new ExcelExportUtil(EmployeeReportResult.class,2,2).
+//                export(response,fis,list,month+"人事报表.xlsx");
 
         //3.根据模板创建工作簿
         Workbook wb = new XSSFWorkbook(fis);
