@@ -1,0 +1,3 @@
+eureka:
+    serviceUrl: #Eureka客户端与Eureka服务端进行交互的地址
+      defaultZone: http://180.76.235.76:${server.port}/eureka/

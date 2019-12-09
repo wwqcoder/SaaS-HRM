@@ -6,13 +6,10 @@ eureka:
 server:
   port: 9001
 spring:
+  profiles:
+    active: @spring.profiles.active@
   application:
     name: ihrm-company #指定服务名
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ihrm?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
-    username: root
-    password: 123456
   main:
     allow-bean-definition-overriding: true #当遇到同样名字的时候，是否允许覆盖注册
   jpa:
@@ -21,6 +18,3 @@ spring:
     database: MySQL
     show-sql: true
     open-in-view: true
-  redis:
-    host: 127.0.0.1
-    port: 6379

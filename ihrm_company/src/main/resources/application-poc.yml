@@ -1,0 +1,14 @@
+#微服务注册到eureka配置
+eureka:
+  client:
+    service-url:
+      defaultZone: http://180.76.235.76:6868/eureka/
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://180.76.235.76:3306/ihrm?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: root
+  redis:
+    host: 180.76.235.76
+    port: 6379

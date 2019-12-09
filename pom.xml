@@ -34,6 +34,26 @@
         <fastjson.version>1.2.47</fastjson.version>
     </properties>
 
+    <profiles>
+        <!--开发环境-->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <!--POC环境-->
+        <profile>
+            <id>poc</id>
+            <properties>
+                <spring.profiles.active>poc</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
